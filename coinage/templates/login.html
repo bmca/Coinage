@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8 />
+	<title></title>
+	<link rel="stylesheet" type="text/css" media="screen" href="css/master.css" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+	<!--[if IE]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<link href="{{ STATIC_URL }}css/facebook.css" type="text/css" rel="stylesheet" media="all" />
+	{% include 'django_facebook/_facebook_js.html' %}
+
+</head>
+<body>
+ 
+<form action="{% url 'facebook_connect' %}?facebook_login=1" method="post">
+    <input type="hidden" value="{{ request.path }}" name="next" />
+    <input type="hidden" value="{{ request.path }}" name="register_next" />
+    <input type="hidden" value="{{ request.path }}" name="error_next" />
+    {% csrf_token %}
+    <input onclick="F.connect(this.parentNode); return false;" type="image" src="{{ STATIC_URL }}django_facebook/images/facebook_login.png" />
+</form>
+{% if user.is_authenticated %}
+{{ user.first_name }}
+<tr>
+                    <td>First Name:</td><td>{{ user.first_name }}</td>
+                </tr>
+                <tr>
+                    <td>Last Name:</td><td>{{ user.last_name }}</td>
+                </tr>
+                <tr>
+                    <td>Gender:</td><td>{{ user.profile_or_self.gender }}</td>
+                </tr>
+                <tr>
+                    <td>About me:</td><td>{{ user.profile_or_self.about_me }}</td>
+                </tr>
+                <tr>
+                    <td>Facebook profile url:</td><td>{{ user.profile_or_self.facebook_profile_url }}</td>
+                </tr>
+                <tr>
+                    <td>Facebook ID:</td><td>{{ user.profile_or_self.facebook_id }}</td>
+                </tr>
+                <tr>
+                    <td>Date of Birth:</td><td>{{ user.profile_or_self.date_of_birth }}</td>
+                </tr>
+                <tr>
+                    <td>Website Url:</td><td>{{ user.profile_or_self.website_url }}</td>
+                </tr>
+                {% if user.profile_or_self.image %}
+                <tr>
+                    <td>Hotlinked Image:</td><td><img src="http://graph.facebook.com/{{ user.profile_or_self.facebook_id }}/picture?type=large" title="facebook stored image" /><br /></td>
+                </tr>
+                {% endif %}
+{% endif %} 
+</body>
+</html>
+
+
